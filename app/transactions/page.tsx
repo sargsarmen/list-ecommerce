@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -65,10 +65,10 @@ export default function TransactionsPage() {
           onClick: () => {
             undoStatusUpdate(transactionId)
             toast("Cancellation Undone", {
-              description: "Order status has been reverted."
+              description: "Order status has been reverted.",
             })
-          }
-        }
+          },
+        },
       })
     }
 
@@ -92,10 +92,10 @@ export default function TransactionsPage() {
         onClick: () => {
           undoStatusUpdate(transactionId)
           toast("Status Reverted", {
-            description: "Transaction status has been reverted."
+            description: "Transaction status has been reverted.",
           })
-        }
-      }
+        },
+      },
     })
   }
 
@@ -113,7 +113,10 @@ export default function TransactionsPage() {
         ) : (
           <div className="space-y-4">
             {sortedTransactions.map((transaction) => (
-              <Card key={transaction.id} className="overflow-hidden">
+              <Card
+                key={transaction.id}
+                className="overflow-hidden transition-all duration-200 hover:shadow-md hover:border-primary/50"
+              >
                 <CardContent className="p-0">
                   <div className="flex flex-col md:flex-row">
                     <div className="w-full md:w-1/4 p-4 flex items-center justify-center">
@@ -122,7 +125,7 @@ export default function TransactionsPage() {
                           src={transaction.productImage || "/placeholder.svg"}
                           alt={transaction.productTitle}
                           fill
-                          className="object-cover rounded-md"
+                          className="object-cover rounded-md transition-transform hover:scale-105"
                         />
                       </div>
                     </div>
@@ -131,7 +134,9 @@ export default function TransactionsPage() {
                       <div>
                         <div className="flex justify-between items-start mb-2">
                           <Link href={`/products/${transaction.productId}`} className="hover:underline">
-                            <h3 className="font-semibold text-lg">{transaction.productTitle}</h3>
+                            <h3 className="font-semibold text-lg transition-colors hover:text-primary">
+                              {transaction.productTitle}
+                            </h3>
                           </Link>
                           <Badge className={getStatusColor(transaction.status)}>
                             {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
@@ -164,13 +169,14 @@ export default function TransactionsPage() {
                               size="sm"
                               variant="outline"
                               onClick={() => handleStatusUpdate(transaction.id, "processing")}
+                              className="transition-colors hover:bg-primary/10"
                             >
                               Process Order
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
-                              className="text-red-500 hover:text-red-700"
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors"
                               onClick={() => handleOpenCancelDialog(transaction.id)}
                             >
                               Cancel
@@ -183,6 +189,7 @@ export default function TransactionsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => handleStatusUpdate(transaction.id, "shipped")}
+                            className="transition-colors hover:bg-primary/10"
                           >
                             Mark as Shipped
                           </Button>
@@ -193,6 +200,7 @@ export default function TransactionsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => handleStatusUpdate(transaction.id, "delivered")}
+                            className="transition-colors hover:bg-primary/10"
                           >
                             Mark as Delivered
                           </Button>
@@ -244,3 +252,4 @@ export default function TransactionsPage() {
     </>
   )
 }
+
