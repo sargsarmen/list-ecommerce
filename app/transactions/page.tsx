@@ -1,15 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useTransactions, type TransactionStatus } from "@/context/transactions-context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
-import { Undo2, AlertTriangle } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -21,7 +21,6 @@ import {
 
 export default function TransactionsPage() {
   const { transactions, updateTransactionStatus, undoStatusUpdate } = useTransactions()
-  const { toast } = useToast()
   const [transactionToCancel, setTransactionToCancel] = useState<string | null>(null)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
@@ -56,31 +55,20 @@ export default function TransactionsPage() {
   const handleConfirmCancel = () => {
     if (transactionToCancel) {
       const previousStatus = updateTransactionStatus(transactionToCancel, "cancelled")
+      const transactionId = transactionToCancel // Store in local variable for closure
 
-      if (previousStatus) {
-        const transactionId = transactionToCancel // Store in local variable for closure
-        toast({
-          title: "Order Cancelled",
-          description: "The order has been cancelled successfully.",
-          action: (
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-1"
-              onClick={() => {
-                undoStatusUpdate(transactionId)
-                toast({
-                  title: "Cancellation Undone",
-                  description: `Order status has been reverted to ${previousStatus}`,
-                })
-              }}
-            >
-              <Undo2 className="h-3.5 w-3.5" />
-              Undo
-            </Button>
-          ),
-        })
-      }
+      toast.success("Order Cancelled", {
+        description: "The order has been cancelled successfully.",
+        action: {
+          label: "Undo",
+          onClick: () => {
+            undoStatusUpdate(transactionId)
+            toast.success("Cancellation Undone", {
+              description: "Order status has been reverted.",
+            })
+          },
+        },
+      })
     }
 
     // Close the dialog and reset the transaction to cancel
@@ -92,36 +80,21 @@ export default function TransactionsPage() {
   const handleStatusUpdate = (transactionId: string, newStatus: TransactionStatus) => {
     const previousStatus = updateTransactionStatus(transactionId, newStatus)
 
-    if (previousStatus) {
-      // Store transaction ID in a local variable to ensure it's captured correctly in the closure
-      const id = transactionId
+    // Format the status for display
+    const formattedStatus = newStatus.charAt(0).toUpperCase() + newStatus.slice(1)
 
-      // Format the status for display
-      const formattedStatus = newStatus.charAt(0).toUpperCase() + newStatus.slice(1)
-
-      // Show toast with undo button
-      toast({
-        title: "Status Updated",
-        description: `Transaction status has been updated to ${formattedStatus}`,
-        action: (
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-1"
-            onClick={() => {
-              undoStatusUpdate(id)
-              toast({
-                title: "Status Reverted",
-                description: `Transaction status has been reverted to ${previousStatus}`,
-              })
-            }}
-          >
-            <Undo2 className="h-3.5 w-3.5" />
-            Undo
-          </Button>
-        ),
-      })
-    }
+    toast.success("Status Updated", {
+      description: `Transaction status has been updated to ${formattedStatus}`,
+      action: {
+        label: "Undo",
+        onClick: () => {
+          undoStatusUpdate(transactionId)
+          toast.success("Status Reverted", {
+            description: "Transaction status has been reverted.",
+          })
+        },
+      },
+    })
   }
 
   return (

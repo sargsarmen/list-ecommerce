@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { useListings } from "@/context/listings-context"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 
 export type TransactionStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled"
 
@@ -168,7 +168,6 @@ const initialTransactions: Transaction[] = [
 export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const { listings, updateListingStock } = useListings()
-  const { toast } = useToast()
 
   // Initialize transactions from localStorage or use initial data
   useEffect(() => {
@@ -200,10 +199,8 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
     const stockUpdateSuccess = updateListingStock(productId, quantity)
 
     if (!stockUpdateSuccess && product.category !== "services" && product.quantity !== undefined) {
-      toast({
-        title: "Insufficient Stock",
+      toast.error("Insufficient Stock", {
         description: `Sorry, there are only ${product.quantity} units available.`,
-        variant: "destructive",
       })
       return false
     }

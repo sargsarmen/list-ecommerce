@@ -1,9 +1,8 @@
 import type React from "react"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 import { Navbar } from "@/components/navbar"
-import { Toaster } from "@/components/ui/toaster"
+import { SonnerProvider } from "@/components/sonner-provider"
 import { ListingsProvider } from "@/context/listings-context"
 import { TransactionsProvider } from "@/context/transactions-context"
 
@@ -17,24 +16,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange
-          storageKey="buysell-theme"
-        >
-          <ListingsProvider>
-            <TransactionsProvider>
-              <div className="flex flex-col min-h-screen">
-                <Navbar />
-                <main className="flex-1">{children}</main>
-              </div>
-              <Toaster />
-            </TransactionsProvider>
-          </ListingsProvider>
-        </ThemeProvider>
+        <ListingsProvider>
+          <TransactionsProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+            </div>
+            <SonnerProvider />
+          </TransactionsProvider>
+        </ListingsProvider>
       </body>
     </html>
   )
 }
+

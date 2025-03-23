@@ -9,7 +9,7 @@ import { ChevronLeft, ShoppingCart, Star, Minus, Plus, AlertCircle } from "lucid
 import { useListings, type Listing } from "@/context/listings-context"
 import { useTransactions } from "@/context/transactions-context"
 import { useRouter } from "next/navigation"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function ProductPage({ params }: { params: { id: string } }) {
@@ -23,7 +23,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const router = useRouter()
-  const { toast } = useToast()
 
   // Format the category for display (convert kebab-case to Title Case)
   const formatCategory = (category: string) => {
@@ -91,12 +90,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     const success = addTransaction(product.id, quantity)
 
     if (success) {
-      toast({
-        title: "Purchase Successful",
+      toast("Purchase Successful", {
         description: `You've purchased ${isService ? "the" : quantity} ${isService ? "service" : quantity > 1 ? "units" : "unit"} of ${product.title}`,
       })
 
-      router.push("/transactions")
+      router.push("/") // Redirect to home page instead of transactions
     }
   }
 
