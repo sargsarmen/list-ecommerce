@@ -35,11 +35,10 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-200 ${
-        isScrolled ? "bg-background/95 backdrop-blur-sm shadow-sm" : "bg-background"
-      } border-b`}
+      className={`sticky top-0 z-50 w-full transition-all duration-200 ${isScrolled ? "bg-background/95 backdrop-blur-sm shadow-sm" : "bg-background"
+        } border-b`}
     >
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-2">
           <Sheet>
             <SheetTrigger asChild>
@@ -57,9 +56,8 @@ export function Navbar() {
                   <SheetClose asChild key={item.href}>
                     <Link
                       href={item.href}
-                      className={`flex items-center text-lg font-medium transition-colors ${
-                        pathname === item.href ? "text-primary" : "text-muted-foreground"
-                      } hover:text-primary`}
+                      className={`flex items-center text-lg font-medium transition-colors ${pathname === item.href ? "text-primary" : "text-muted-foreground"
+                        } hover:text-primary`}
                     >
                       {item.name === "Home" && <ShoppingBag className="mr-2 h-5 w-5" />}
                       {item.name === "Sell" && <Package className="mr-2 h-5 w-5" />}
@@ -67,20 +65,6 @@ export function Navbar() {
                     </Link>
                   </SheetClose>
                 ))}
-                <SheetClose asChild>
-                  <Link
-                    href="/transactions"
-                    className={`flex items-center text-lg font-medium transition-colors ${
-                      pathname === "/transactions" ? "text-primary" : "text-muted-foreground"
-                    } hover:text-primary`}
-                  >
-                    <Package className="mr-2 h-5 w-5" />
-                    Transactions
-                    {pendingCount > 0 && (
-                      <Badge className="ml-2 h-5 w-5 flex items-center justify-center p-0">{pendingCount}</Badge>
-                    )}
-                  </Link>
-                </SheetClose>
               </nav>
             </SheetContent>
           </Sheet>
@@ -96,9 +80,8 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative transition-colors hover:text-foreground ${
-                pathname === item.href ? "text-foreground" : "text-muted-foreground"
-              } after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all hover:after:w-full`}
+              className={`relative transition-colors hover:text-foreground ${pathname === item.href ? "text-foreground" : "text-muted-foreground"
+                } after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all hover:after:w-full`}
             >
               {item.name}
             </Link>

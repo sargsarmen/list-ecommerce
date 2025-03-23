@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
-import { AlertTriangle } from "lucide-react"
+import { AlertTriangle } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -57,17 +57,18 @@ export default function TransactionsPage() {
       const previousStatus = updateTransactionStatus(transactionToCancel, "cancelled")
       const transactionId = transactionToCancel // Store in local variable for closure
 
-      toast.success("Order Cancelled", {
+      // Use the same toast style as the buy operation (no variant specified)
+      toast("Order Cancelled", {
         description: "The order has been cancelled successfully.",
         action: {
           label: "Undo",
           onClick: () => {
             undoStatusUpdate(transactionId)
-            toast.success("Cancellation Undone", {
-              description: "Order status has been reverted.",
+            toast("Cancellation Undone", {
+              description: "Order status has been reverted."
             })
-          },
-        },
+          }
+        }
       })
     }
 
@@ -83,17 +84,18 @@ export default function TransactionsPage() {
     // Format the status for display
     const formattedStatus = newStatus.charAt(0).toUpperCase() + newStatus.slice(1)
 
-    toast.success("Status Updated", {
+    // Use the same toast style as the buy operation (no variant specified)
+    toast("Status Updated", {
       description: `Transaction status has been updated to ${formattedStatus}`,
       action: {
         label: "Undo",
         onClick: () => {
           undoStatusUpdate(transactionId)
-          toast.success("Status Reverted", {
-            description: "Transaction status has been reverted.",
+          toast("Status Reverted", {
+            description: "Transaction status has been reverted."
           })
-        },
-      },
+        }
+      }
     })
   }
 
@@ -242,4 +244,3 @@ export default function TransactionsPage() {
     </>
   )
 }
-

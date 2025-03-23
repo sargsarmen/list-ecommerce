@@ -52,6 +52,17 @@ const formSchema = z.object({
   shippingOption: z.string().optional(),
 })
 
+// Default form values to ensure inputs remain controlled
+const defaultFormValues = {
+  title: "",
+  description: "",
+  category: "", // Empty string instead of undefined
+  condition: "", // Empty string instead of undefined
+  price: 0, // 0 instead of undefined
+  quantity: 1,
+  shippingOption: "flat",
+}
+
 export default function SellPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
@@ -59,13 +70,7 @@ export default function SellPage() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      price: undefined,
-      quantity: 1,
-      shippingOption: "flat", // Set default shipping option to "flat"
-    },
+    defaultValues: defaultFormValues,
   })
 
   const watchCategory = form.watch("category")
@@ -74,11 +79,11 @@ export default function SellPage() {
   // Reset condition, quantity, and shipping option when category changes to services
   useEffect(() => {
     if (isService) {
-      form.setValue("condition", undefined)
-      form.setValue("quantity", undefined)
-      form.setValue("shippingOption", undefined)
+      form.setValue("condition", "")
+      form.setValue("quantity", isService ? 1 : form.getValues("quantity")) // Keep as 1 to maintain controlled state
+      form.setValue("shippingOption", "")
     } else {
-      if (!form.getValues("quantity")) {
+      if (!form.getValues("quantity") || form.getValues("quantity") < 1) {
         form.setValue("quantity", 1)
       }
       if (!form.getValues("shippingOption")) {
@@ -114,15 +119,12 @@ export default function SellPage() {
         },
       })
 
-      // Reset the form
+      // Reset the form with consistent default values to maintain controlled inputs
       form.reset({
-        title: "",
-        description: "",
-        price: undefined,
-        category: undefined,
-        condition: undefined,
-        quantity: isService ? undefined : 1,
-        shippingOption: isService ? undefined : "flat",
+        ...defaultFormValues,
+        // Ensure these fields have appropriate values based on the current state
+        quantity: isService ? 1 : 1, // Always keep as 1 to maintain controlled state
+        shippingOption: isService ? "" : "flat",
       })
 
       setIsSubmitting(false)
@@ -210,7 +212,10 @@ export default function SellPage() {
                         render={({ field, fieldState }) => (
                           <FormItem className={fieldState.invalid ? "form-item-invalid" : ""}>
                             <FormLabel className="form-label-required">Category</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value || ""} // Ensure value is never undefined
+                            >
                               <FormControl>
                                 <SelectTrigger className={`form-input ${fieldState.invalid ? "border-[#dc2626]" : ""}`}>
                                   <SelectValue placeholder="Select a category" />
@@ -239,7 +244,11 @@ export default function SellPage() {
                         render={({ field, fieldState }) => (
                           <FormItem className={fieldState.invalid ? "form-item-invalid" : ""}>
                             <FormLabel>Condition</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isService}>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value || ""} // Ensure value is never undefined
+                              disabled={isService}
+                            >
                               <FormControl>
                                 <SelectTrigger className={`form-input ${fieldState.invalid ? "border-[#dc2626]" : ""}`}>
                                   <SelectValue
@@ -306,6 +315,7 @@ export default function SellPage() {
                                   step="0.01"
                                   className={`pl-9 form-input ${fieldState.invalid ? "border-[#dc2626]" : ""}`}
                                   {...field}
+                                  value={field.value || ""} // Ensure value is never undefined
                                 />
                               </div>
                             </FormControl>
@@ -347,7 +357,7 @@ export default function SellPage() {
                             <FormControl>
                               <RadioGroup
                                 onValueChange={field.onChange}
-                                defaultValue={field.value}
+                                value={field.value || "flat"} // Ensure value is never undefined
                                 className="space-y-3"
                               >
                                 <div className="flex items-center space-x-2 border rounded-lg p-3">

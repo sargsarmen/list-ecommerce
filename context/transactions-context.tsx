@@ -199,7 +199,8 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
     const stockUpdateSuccess = updateListingStock(productId, quantity)
 
     if (!stockUpdateSuccess && product.category !== "services" && product.quantity !== undefined) {
-      toast.error("Insufficient Stock", {
+      // Use the same toast style for errors (no variant)
+      toast("Insufficient Stock", {
         description: `Sorry, there are only ${product.quantity} units available.`,
       })
       return false
