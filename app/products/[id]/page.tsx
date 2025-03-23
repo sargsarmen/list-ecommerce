@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, use } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -13,9 +13,8 @@ import { toast } from "sonner"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function ProductPage({ params }: { params: { id: string } }) {
-  // Unwrap params using React.use()
-  const unwrappedParams = use(params as unknown as Promise<{ id: string }>)
-  const productId = unwrappedParams.id
+  // Access the id directly from params
+  const productId = params.id
 
   const { listings } = useListings()
   const { addTransaction } = useTransactions()

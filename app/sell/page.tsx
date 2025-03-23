@@ -13,9 +13,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
-import { DollarSign, CheckCircle } from "lucide-react"
+import { DollarSign } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useListings } from "@/context/listings-context"
+import { toast } from "sonner"
 
 const formSchema = z.object({
   title: z
@@ -53,8 +54,6 @@ const formSchema = z.object({
 
 export default function SellPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [submittedData, setSubmittedData] = useState<(z.infer<typeof formSchema> & { id?: string }) | null>(null)
   const router = useRouter()
   const { addListing } = useListings()
 
@@ -105,61 +104,29 @@ export default function SellPage() {
     // Simulate API call
     setTimeout(() => {
       console.log(values)
-      setSubmittedData({
-        ...values,
-        id: newListingId, // Store the ID with the submitted data
-      })
-      setIsSubmitting(false)
-      setIsSuccess(true)
-    }, 1500)
-  }
 
-  if (isSuccess && submittedData) {
-    return (
-      <div className="container mx-auto px-4 py-12">
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <div className="flex items-center justify-center mb-4">
-              <div className="rounded-full bg-green-100 p-3">
-                <CheckCircle className="h-8 w-8 text-green-600" />
-              </div>
-            </div>
-            <CardTitle className="text-center text-2xl">Listing Created Successfully!</CardTitle>
-            <CardDescription className="text-center">
-              Your {isService ? "service" : "product"} has been listed and is now visible to potential buyers.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="border rounded-lg p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold">{submittedData.title}</h3>
-                  <p className="text-muted-foreground">
-                    ${typeof submittedData.price === "number" ? submittedData.price.toFixed(2) : "0.00"}
-                  </p>
-                </div>
-                <Button variant="outline" onClick={() => router.push(`/products/${submittedData.id}`)}>
-                  View Listing
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button
-              variant="outline"
-              onClick={() => {
-                form.reset()
-                setIsSuccess(false)
-                setSubmittedData(null)
-              }}
-            >
-              Create Another Listing
-            </Button>
-            <Button onClick={() => router.push("/")}>Go to Home Page</Button>
-          </CardFooter>
-        </Card>
-      </div>
-    )
+      // Show toast notification
+      toast("Listing Created Successfully!", {
+        description: `Your ${isService ? "service" : "product"} "${values.title}" has been listed.`,
+        action: {
+          label: "View Listing",
+          onClick: () => router.push(`/products/${newListingId}`),
+        },
+      })
+
+      // Reset the form
+      form.reset({
+        title: "",
+        description: "",
+        price: undefined,
+        category: undefined,
+        condition: undefined,
+        quantity: isService ? undefined : 1,
+        shippingOption: isService ? undefined : "flat",
+      })
+
+      setIsSubmitting(false)
+    }, 1500)
   }
 
   // Updated custom styles for form validation
