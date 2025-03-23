@@ -360,7 +360,8 @@ export default function SellPage() {
                                 disabled={isService}
                                 className={`form-input ${fieldState.invalid ? "border-[#dc2626]" : ""}`}
                                 {...field}
-                                value={field.value || ""}
+                                // Convert undefined or null to empty string to maintain controlled state
+                                value={field.value === undefined || field.value === null ? "" : field.value}
                               />
                             </FormControl>
                             <FormMessage />

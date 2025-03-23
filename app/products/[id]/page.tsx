@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, use } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,10 @@ import { useToast } from "@/components/ui/use-toast"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function ProductPage({ params }: { params: { id: string } }) {
+  // Unwrap params using React.use()
+  const unwrappedParams = use(params as unknown as Promise<{ id: string }>)
+  const productId = unwrappedParams.id
+
   const { listings } = useListings()
   const { addTransaction } = useTransactions()
   const [product, setProduct] = useState<Listing | null>(null)
@@ -31,14 +35,14 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     // Find the product with the matching ID
-    const foundProduct = listings.find((item) => item.id === params.id)
+    const foundProduct = listings.find((item) => item.id === productId)
 
     if (foundProduct) {
       setProduct(foundProduct)
     }
 
     setIsLoading(false)
-  }, [listings, params.id])
+  }, [listings, productId])
 
   // Handle product not found
   if (!isLoading && !product) {
