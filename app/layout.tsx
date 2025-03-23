@@ -3,7 +3,6 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
 import { Toaster } from "@/components/ui/toaster"
 import { ListingsProvider } from "@/context/listings-context"
 import { TransactionsProvider } from "@/context/transactions-context"
@@ -24,7 +23,6 @@ export default function RootLayout({
               <div className="flex flex-col min-h-screen">
                 <Navbar />
                 <main className="flex-1">{children}</main>
-                <Footer />
               </div>
               <Toaster />
             </TransactionsProvider>
@@ -35,10 +33,3 @@ export default function RootLayout({
   )
 }
 
-
-
-import './globals.css'
-
-export const metadata = {
-      generator: 'v0.dev'
-    };
