@@ -124,8 +124,6 @@ export default function SellPage() {
 
     // Simulate API call
     setTimeout(() => {
-      console.log(values)
-
       // Show toast notification
       toast("Listing Created Successfully!", {
         description: `Your ${isService ? "service" : "product"} "${values.title}" has been listed.`,
@@ -175,7 +173,6 @@ export default function SellPage() {
       border-color: #dc2626 !important;
     }
   `
-  console.log("watchCategory", watchCategory)
   return (
     <div className="container mx-auto px-4 py-8">
       <style jsx global>
