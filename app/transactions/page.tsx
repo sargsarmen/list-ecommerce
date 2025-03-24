@@ -101,8 +101,8 @@ export default function TransactionsPage() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">My Transactions</h1>
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">My Transactions</h1>
 
         {sortedTransactions.length === 0 ? (
           <Card>
@@ -111,39 +111,39 @@ export default function TransactionsPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {sortedTransactions.map((transaction) => (
               <Card
                 key={transaction.id}
-                className="overflow-hidden transition-all duration-200 hover:shadow-md hover:border-primary/50"
+                className="overflow-hidden transition-all duration-200 hover:shadow-md hover:border-primary/50 hover:translate-y-[-2px] cursor-pointer"
               >
                 <CardContent className="p-0">
-                  <div className="flex flex-col md:flex-row">
-                    <div className="w-full md:w-1/4 p-4 flex items-center justify-center">
-                      <div className="relative h-32 w-32">
-                        <Image
-                          src={transaction.productImage || "/placeholder.svg"}
-                          alt={transaction.productTitle}
-                          fill
-                          className="object-cover rounded-md transition-transform hover:scale-105"
-                        />
-                      </div>
+                  <div className="grid max-sm:grid-rows-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+                    <div className="sm:col-span-1 relative  p-3 sm:p-4 flex items-center justify-center border-b md:border-b-0 md:border-r border-border">
+                      <Image
+                        src={transaction.productImage || "/placeholder.svg"}
+                        alt={transaction.productTitle}
+                        fill
+                        className="object-cover rounded-md transition-transform hover:scale-105"
+                      />
                     </div>
-
-                    <div className="w-full md:w-3/4 p-4 flex flex-col justify-between">
+                    {/* Content container */}
+                    <div className="sm:col-span-1 md:col-span-3 p-3 sm:p-4 flex flex-col justify-between">
                       <div>
-                        <div className="flex justify-between items-start mb-2">
+                        {/* Title and status - better aligned on mobile */}
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0 mb-2">
                           <Link href={`/products/${transaction.productId}`} className="hover:underline">
-                            <h3 className="font-semibold text-lg transition-colors hover:text-primary">
+                            <h3 className="font-semibold text-base sm:text-lg transition-colors hover:text-primary line-clamp-2">
                               {transaction.productTitle}
                             </h3>
                           </Link>
-                          <Badge className={getStatusColor(transaction.status)}>
+                          <Badge className={`${getStatusColor(transaction.status)} self-start sm:self-auto`}>
                             {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
                           </Badge>
                         </div>
 
-                        <div className="text-sm text-muted-foreground mb-4">
+                        {/* Transaction details - more compact on mobile */}
+                        <div className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 space-y-1">
                           <p>Order ID: {transaction.id}</p>
                           <p>Seller: {transaction.seller}</p>
                           <p>
@@ -152,16 +152,18 @@ export default function TransactionsPage() {
                           </p>
                         </div>
 
-                        <div className="flex justify-between items-center mb-4">
+                        {/* Price information */}
+                        <div className="flex justify-between items-center mb-3 sm:mb-4">
                           <div>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-xs sm:text-sm text-muted-foreground">
                               ${transaction.price.toFixed(2)} x {transaction.quantity}
                             </p>
-                            <p className="font-bold">Total: ${transaction.total.toFixed(2)}</p>
+                            <p className="font-bold text-sm sm:text-base">Total: ${transaction.total.toFixed(2)}</p>
                           </div>
                         </div>
                       </div>
 
+                      {/* Action buttons - better layout on mobile */}
                       <div className="flex flex-wrap gap-2">
                         {transaction.status === "pending" && (
                           <>
@@ -169,14 +171,14 @@ export default function TransactionsPage() {
                               size="sm"
                               variant="outline"
                               onClick={() => handleStatusUpdate(transaction.id, "processing")}
-                              className="transition-colors hover:bg-primary/10"
+                              className="transition-colors hover:bg-primary/10 text-xs sm:text-sm h-8 px-2 sm:px-3"
                             >
                               Process Order
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
-                              className="text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors"
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors text-xs sm:text-sm h-8 px-2 sm:px-3"
                               onClick={() => handleOpenCancelDialog(transaction.id)}
                             >
                               Cancel
@@ -189,7 +191,7 @@ export default function TransactionsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => handleStatusUpdate(transaction.id, "shipped")}
-                            className="transition-colors hover:bg-primary/10"
+                            className="transition-colors hover:bg-primary/10 text-xs sm:text-sm h-8 px-2 sm:px-3"
                           >
                             Mark as Shipped
                           </Button>
@@ -200,20 +202,20 @@ export default function TransactionsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => handleStatusUpdate(transaction.id, "delivered")}
-                            className="transition-colors hover:bg-primary/10"
+                            className="transition-colors hover:bg-primary/10 text-xs sm:text-sm h-8 px-2 sm:px-3"
                           >
                             Mark as Delivered
                           </Button>
                         )}
 
                         {transaction.status === "delivered" && (
-                          <Button size="sm" variant="outline" disabled>
+                          <Button size="sm" variant="outline" disabled className="text-xs sm:text-sm h-8 px-2 sm:px-3">
                             Completed
                           </Button>
                         )}
 
                         {transaction.status === "cancelled" && (
-                          <Button size="sm" variant="outline" disabled>
+                          <Button size="sm" variant="outline" disabled className="text-xs sm:text-sm h-8 px-2 sm:px-3">
                             Cancelled
                           </Button>
                         )}
@@ -229,7 +231,7 @@ export default function TransactionsPage() {
 
       {/* Cancel Confirmation Dialog */}
       <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] max-w-[90vw] rounded-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-red-500" />
@@ -239,11 +241,11 @@ export default function TransactionsPage() {
               Are you sure you want to cancel this order? This action can be undone, but may affect the seller.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex gap-2 sm:justify-end">
-            <Button variant="outline" onClick={() => setIsConfirmOpen(false)}>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-end">
+            <Button variant="outline" onClick={() => setIsConfirmOpen(false)} className="sm:order-1 order-2">
               No, Keep Order
             </Button>
-            <Button variant="destructive" onClick={handleConfirmCancel}>
+            <Button variant="destructive" onClick={handleConfirmCancel} className="sm:order-2 order-1">
               Yes, Cancel Order
             </Button>
           </DialogFooter>
@@ -252,4 +254,3 @@ export default function TransactionsPage() {
     </>
   )
 }
-
