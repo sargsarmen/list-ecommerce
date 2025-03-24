@@ -29,7 +29,7 @@ const formSchema = z.object({
     }),
   category: z.string({
     required_error: "Please select a category.",
-  }),
+  }).trim().min(1, { message: "Please select a category." }),
   condition: z.string().optional(),
   price: z.coerce.number().positive({
     message: "Price must be a positive number.",
@@ -50,7 +50,23 @@ const formSchema = z.object({
     })
     .optional(),
   shippingOption: z.string().optional(),
-})
+}).refine((data) => {
+  if (data.category !== "services" && !data.condition) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Please select a condition",
+  path: ["condition"],
+}).refine((data) => {
+  if (data.category !== "services" && !data.quantity) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Please select a quantity",
+  path: ["quantity"],
+});
 
 // Default form values to ensure inputs remain controlled
 const defaultFormValues = {
@@ -83,7 +99,7 @@ export default function SellPage() {
       form.setValue("quantity", isService ? 1 : form.getValues("quantity")) // Keep as 1 to maintain controlled state
       form.setValue("shippingOption", "")
     } else {
-      if (!form.getValues("quantity") || form.getValues("quantity") < 1) {
+      if (!(form.getValues("quantity") ?? 0) || (form.getValues("quantity") ?? 0) < 1) {
         form.setValue("quantity", 1)
       }
       if (!form.getValues("shippingOption")) {
@@ -159,7 +175,7 @@ export default function SellPage() {
       border-color: #dc2626 !important;
     }
   `
-
+  console.log("watchCategory", watchCategory)
   return (
     <div className="container mx-auto px-4 py-8">
       <style jsx global>
@@ -243,7 +259,7 @@ export default function SellPage() {
                         name="condition"
                         render={({ field, fieldState }) => (
                           <FormItem className={fieldState.invalid ? "form-item-invalid" : ""}>
-                            <FormLabel>Condition</FormLabel>
+                            <FormLabel className={!isService ? "form-label-required" : ''}>Condition</FormLabel>
                             <Select
                               onValueChange={field.onChange}
                               value={field.value || ""} // Ensure value is never undefined
@@ -329,7 +345,7 @@ export default function SellPage() {
                         name="quantity"
                         render={({ field, fieldState }) => (
                           <FormItem className={fieldState.invalid ? "form-item-invalid" : ""}>
-                            <FormLabel>Quantity</FormLabel>
+                            <FormLabel className={!isService ? "form-label-required" : ''}>Quantity</FormLabel>
                             <FormControl>
                               <Input
                                 type="number"
