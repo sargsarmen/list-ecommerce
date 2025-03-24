@@ -99,13 +99,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <Link href="/" className="flex items-center text-muted-foreground hover:text-foreground">
-          <ChevronLeft className="mr-1 h-4 w-4" />
-          Back to Products
-        </Link>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
         {/* Product Image */}
         <div className="overflow-hidden">

@@ -1,12 +1,17 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, Package, ShoppingBag } from "lucide-react"
+import { Menu, Package, ShoppingBag, ArrowRightLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { useTransactions } from "@/context/transactions-context"
 import { useState, useEffect } from "react"
+
+const navItems = [
+  { name: "Products", href: "/" },
+  { name: "Sell", href: "/sell" },
+  { name: "Transactions", href: "/transactions" },
+]
 
 export function Navbar() {
   const pathname = usePathname()
@@ -17,11 +22,6 @@ export function Navbar() {
   const pendingCount = transactions.filter(
     (t) => t.status === "pending" || t.status === "processing" || t.status === "shipped",
   ).length
-
-  const navItems = [
-    { name: "Products", href: "/" },
-    { name: "Sell", href: "/sell" },
-  ]
 
   // Add scroll event listener to change header style on scroll
   useEffect(() => {
@@ -38,7 +38,7 @@ export function Navbar() {
       className={`sticky top-0 z-50 w-full transition-all duration-200 ${isScrolled ? "bg-background/95 backdrop-blur-sm shadow-sm" : "bg-background"
         } border-b`}
     >
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex h-16 items-center justify-start gap-8 px-4 md:px-6">
         <div className="flex items-center gap-2">
           <Sheet>
             <SheetTrigger asChild>
@@ -61,6 +61,7 @@ export function Navbar() {
                     >
                       {item.name === "Products" && <ShoppingBag className="mr-2 h-5 w-5" />}
                       {item.name === "Sell" && <Package className="mr-2 h-5 w-5" />}
+                      {item.name === "Transactions" && <ArrowRightLeft className="mr-2 h-5 w-5" />}
                       {item.name}
                     </Link>
                   </SheetClose>
@@ -68,13 +69,11 @@ export function Navbar() {
               </nav>
             </SheetContent>
           </Sheet>
-
           <Link href="/" className="flex items-center space-x-2 transition-opacity hover:opacity-80">
             <ShoppingBag className="h-6 w-6 hidden sm:inline-block" />
             <span className="font-bold text-lg sm:text-xl">BuySell</span>
           </Link>
         </div>
-
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {navItems.map((item) => (
             <Link
@@ -87,20 +86,6 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
-
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="relative hover:bg-primary/10" asChild>
-            <Link href="/transactions">
-              <Package className="h-5 w-5" />
-              {pendingCount > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0">
-                  {pendingCount}
-                </Badge>
-              )}
-              <span className="sr-only">Transactions</span>
-            </Link>
-          </Button>
-        </div>
       </div>
     </header>
   )
