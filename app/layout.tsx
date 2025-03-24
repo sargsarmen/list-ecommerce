@@ -1,7 +1,6 @@
 import type React from "react"
 import { Inter } from "next/font/google"
 import { Navbar } from "@/components/navbar"
-import { SonnerProvider } from "@/components/sonner-provider"
 import { ListingsProvider } from "@/context/listings-context"
 import { TransactionsProvider } from "@/context/transactions-context"
 
@@ -23,7 +22,6 @@ export default function RootLayout({
               <Navbar />
               <main className="flex-1">{children}</main>
             </div>
-            <SonnerProvider />
           </TransactionsProvider>
         </ListingsProvider>
       </body>
