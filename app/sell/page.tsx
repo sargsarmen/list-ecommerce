@@ -400,7 +400,7 @@ export default function SellPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting} className="w-full md:w-[120px]">
                   {isSubmitting ? "Creating Listing..." : "Create Listing"}
                 </Button>
               </CardFooter>
