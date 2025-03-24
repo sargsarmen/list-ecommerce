@@ -1,5 +1,6 @@
 import type React from "react"
 import { Inter } from "next/font/google"
+import { Toaster } from "sonner"
 import { Navbar } from "@/components/navbar"
 import { ListingsProvider } from "@/context/listings-context"
 import { TransactionsProvider } from "@/context/transactions-context"
@@ -22,6 +23,12 @@ export default function RootLayout({
               <Navbar />
               <main className="flex-1">{children}</main>
             </div>
+            <Toaster
+              position="bottom-right"
+              theme="light"
+              closeButton
+              richColors
+            />
           </TransactionsProvider>
         </ListingsProvider>
       </body>
