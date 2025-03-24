@@ -19,7 +19,7 @@ export function Navbar() {
   ).length
 
   const navItems = [
-    { name: "Home", href: "/" },
+    { name: "Products", href: "/" },
     { name: "Sell", href: "/sell" },
   ]
 
@@ -59,7 +59,7 @@ export function Navbar() {
                       className={`flex items-center text-lg font-medium transition-colors ${pathname === item.href ? "text-primary" : "text-muted-foreground"
                         } hover:text-primary`}
                     >
-                      {item.name === "Home" && <ShoppingBag className="mr-2 h-5 w-5" />}
+                      {item.name === "Products" && <ShoppingBag className="mr-2 h-5 w-5" />}
                       {item.name === "Sell" && <Package className="mr-2 h-5 w-5" />}
                       {item.name}
                     </Link>

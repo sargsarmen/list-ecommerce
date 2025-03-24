@@ -48,7 +48,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
         <p className="text-muted-foreground mb-6">The product you're looking for doesn't exist or has been removed.</p>
-        <Button onClick={() => router.push("/")}>Return to Home</Button>
+        <Button onClick={() => router.push("/")}>Return to Products</Button>
       </div>
     )
   }
@@ -106,25 +106,25 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
         {/* Product Image */}
-        <div className="border rounded-lg overflow-hidden">
+        <div className="overflow-hidden">
           <Image
             src={product.image || "/placeholder.svg"}
             alt={product.title}
             width={600}
             height={600}
-            className="w-full object-cover"
+            className="w-full object-cover border rounded-lg"
           />
         </div>
 
         {/* Product Details */}
-        <div>
+        <div className="md:col-span-2">
           <Badge variant="outline" className="mb-2">
             {formatCategory(product.category)}
           </Badge>
 
-          <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
+          <h1 className="text-lg sm:text-xl md:text-3xl font-bold mb-2">{product.title}</h1>
 
           <div className="flex items-center mb-4">
             <div className="flex items-center">
@@ -143,7 +143,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="mb-6">
-            <span className="text-3xl font-bold">${product.price.toFixed(2)}</span>
+            <span className="text-lg sm:text-xl md:text-3xl font-bold">${product.price.toFixed(2)}</span>
             {isService && <span className="text-muted-foreground ml-2">per service</span>}
           </div>
 
